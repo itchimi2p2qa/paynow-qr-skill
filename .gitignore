@@ -4,3 +4,4 @@ assets/api-key.txt
 assets/defaults.json
 *.png
 !assets/samples/*.png
+!assets/icons/*.png

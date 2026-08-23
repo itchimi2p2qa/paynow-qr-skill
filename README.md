@@ -13,9 +13,9 @@ https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/heads/main.zip
 Claude.ai — Settings → Capabilities → Skills → Upload skill → pick that zip.
 If the unzipped folder is named `paynow-qr-skill-main`, that is fine as long as `SKILL.md` is inside it.
 
-## Install from this repo
+Stickers are bundled in `assets/icons_pack.py` (and `assets/icons/` when present). No jsDelivr call.
 
-Claude Code / skills CLI
+## Install from this repo
 
 ```bash
 npx skills add itchimi2p2qa/paynow-qr-skill
@@ -27,7 +27,7 @@ or
 git clone https://github.com/itchimi2p2qa/paynow-qr-skill.git ~/.claude/skills/paynow-qr
 ```
 
-Then set *your* PayNow mobile (not anyone else's):
+Then set *your* PayNow mobile:
 
 ```bash
 python3 scripts/setup_payee.py --mobile +65XXXXXXXX
@@ -41,10 +41,12 @@ A chatbot cannot persist the skill into your account from a URL. You still uploa
 - Builds the EMVCo / SGQR payload on the machine
 - CRC-16/CCITT-FALSE (`123456789` → `29B1`)
 - Mobile, UEN, open amount, bill reference, favorites
-- Optional center sticker
+- Optional bundled center sticker
 - Confirms encoded details before showing the image
 
 PayNow transfers are effectively irreversible. The receiving bank shows the registered account name on scan.
+
+Twemoji stickers are CC-BY 4.0 Twitter, Inc.
 
 ## License
 

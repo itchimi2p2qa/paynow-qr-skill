@@ -2,7 +2,7 @@
 
 Default is no sticker (`none`) so the QR stays easiest to scan.
 
-Pass `--icon burger` (or another id). The script paints a small color sticker on a white circle after encoding `qr_string`.
+Pass `--icon burger` (or another id). The script paints a small bundled Twemoji sticker from `assets/icons/` on a white circle after encoding `qr_string`. No network call.
 
 Keep stickers small. If a bank app fails, regenerate with `--icon none`.
 
