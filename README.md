@@ -2,46 +2,45 @@
 
 Local Singapore PayNow QR generator for Grok, Claude, and other agents. No API key.
 
-This repository *is* the skill. `SKILL.md` sits at the repo root so installers can point at the address directly.
+This repository *is* the skill. `SKILL.md` is at the repo root.
 
-## Download zip
+Repo: https://github.com/itchimi2p2qa/paynow-qr-skill
 
-Ready-made archive of this repo (use this for Claude.ai upload):
+## Point an AI at this repo
 
-https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/heads/main.zip
+Paste one of these to Grok, Claude Code, Codex, or Cursor:
 
-Claude.ai — Settings → Capabilities → Skills → Upload skill → pick that zip.
-If the unzipped folder is named `paynow-qr-skill-main`, that is fine as long as `SKILL.md` is inside it.
+```
+Install the PayNow QR skill from https://github.com/itchimi2p2qa/paynow-qr-skill
+```
 
-Stickers are bundled in `assets/icons_pack.py` (and `assets/icons/` when present). No jsDelivr call.
-
-## Install from this repo
-
-```bash
+```
 npx skills add itchimi2p2qa/paynow-qr-skill
 ```
 
-or
-
-```bash
+```
 git clone https://github.com/itchimi2p2qa/paynow-qr-skill.git ~/.claude/skills/paynow-qr
 ```
 
-Then set *your* PayNow mobile:
+Then, once, set the installer's own mobile:
 
-```bash
+```
 python3 scripts/setup_payee.py --mobile +65XXXXXXXX
 pip install segno pillow
 ```
 
-A chatbot cannot persist the skill into your account from a URL. You still upload the zip once.
+Claude.ai website skills are account settings. A chat cannot write them. There you still do:
+Settings → Capabilities → Skills → Upload skill →
+https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/heads/main.zip
+
+A folder named `paynow-qr-skill-main` is fine if `SKILL.md` is inside it.
 
 ## What it does
 
 - Builds the EMVCo / SGQR payload on the machine
 - CRC-16/CCITT-FALSE (`123456789` → `29B1`)
 - Mobile, UEN, open amount, bill reference, favorites
-- Optional bundled center sticker
+- Optional center sticker when `assets/icons/` or `assets/icons_pack.py` is present
 - Confirms encoded details before showing the image
 
 PayNow transfers are effectively irreversible. The receiving bank shows the registered account name on scan.
