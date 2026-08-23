@@ -1,37 +1,44 @@
-# PayNow QR Code Generator Skill
+# PayNow QR skill
 
-A reusable skill for generating PayNow QR codes in chatbots without requiring an API key.
+Local Singapore PayNow QR generator for Grok, Claude, and other agents. No API key.
 
-## Quick Start
+This repository *is* the skill. `SKILL.md` sits at the repo root so installers can point at the address directly.
+
+## Install from this repo
+
+Claude Code / skills CLI
 
 ```bash
-pip install PayNowQR qrcode pillow
-python paynow_skill.py
+npx skills add itchimi2p2qa/paynow-qr-skill
 ```
 
-## Setup
+or
 
-During first run, you'll be asked for:
-- Your default mobile number (validated as +65 followed by 8 digits)
-- Any favorite contacts for quick access
+```bash
+git clone https://github.com/itchimi2p2qa/paynow-qr-skill.git ~/.claude/skills/paynow-qr
+```
 
-## For Chatbot Integration
+Claude.ai chat — Settings, Capabilities, Skills, upload a zip of this folder.
 
-This skill can be registered as a tool/function in Grok, Claude, or other LLM platforms. Users simply describe what they need and the chatbot generates the QR code locally.
+Grok — give the agent this URL and ask it to install the skill from the repo.
 
-See SKILL.md for full documentation and examples.
+Then set *your* PayNow mobile (not anyone else's):
 
-## Example Commands
+```bash
+python3 scripts/setup_payee.py --mobile +65XXXXXXXX
+pip install segno pillow
+```
 
-- "Create a PayNow QR for 5.50 to +6591234567 for bubble tea"
-- "PayNow QR 12.00 for me"
-- "Create QR for mum 8.90"
-- "Split bill 48.00 with 4 friends at the restaurant"
-- "Business PayNow for UEN 123456789A amount 100 reference INV-001"
+## What it does
 
-## Files
+- Builds the EMVCo / SGQR payload on the machine
+- CRC-16/CCITT-FALSE (`123456789` → `29B1`)
+- Mobile, UEN, open amount, bill reference, favorites
+- Optional center sticker
+- Confirms encoded details before showing the image
 
-- `paynow_skill.py` - Core QR generation with setup and validation
-- `chatbot_tool.py` - Example integration for chatbots
-- `requirements.txt` - Python dependencies
-- `SKILL.md` - Full skill documentation
+PayNow transfers are effectively irreversible. The receiving bank shows the registered account name on scan.
+
+## License
+
+MIT
