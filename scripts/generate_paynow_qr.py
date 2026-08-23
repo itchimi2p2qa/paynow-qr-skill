@@ -7,16 +7,15 @@ import argparse
 import json
 import re
 import sys
-import urllib.request
 from io import BytesIO
 from pathlib import Path
 
 from paynow_payload import build_payload, normalize_mobile, sanitize_reference
 
-TWEMOJI = "https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/{hex}.png"
 SKILL_DIR = Path(__file__).resolve().parents[1]
 DEFAULTS_PATH = SKILL_DIR / "assets" / "defaults.json"
 EXAMPLE_PATH = SKILL_DIR / "assets" / "defaults.example.json"
+ICONS_DIR = SKILL_DIR / "assets" / "icons"
 
 ICONS = {
     "beer": "\U0001F37A",
@@ -168,15 +167,6 @@ def resolve_icon(raw: str | None) -> str:
     raise SystemExit("Unknown icon %s. See references/icons.md" % raw)
 
 
-def emoji_hex(emoji: str) -> str:
-    parts = []
-    for char in emoji:
-        code = format(ord(char), "x")
-        if code != "fe0f":
-            parts.append(code)
-    return "-".join(parts)
-
-
 def write_clean_png(qr_string: str, out: Path, hex_color: str, size: int) -> Path:
     try:
         import segno
@@ -190,14 +180,23 @@ def write_clean_png(qr_string: str, out: Path, hex_color: str, size: int) -> Pat
     return out
 
 
-def fetch_sticker(icon_id: str):
-    emoji = ICONS.get(icon_id)
-    if not emoji:
+def load_sticker(icon_id: str):
+    """Load a bundled sticker. No network."""
+    if not icon_id:
         return None
-    url = TWEMOJI.format(hex=emoji_hex(emoji))
+    local = ICONS_DIR / f"{icon_id}.png"
+    if local.is_file():
+        return local.read_bytes()
     try:
-        with urllib.request.urlopen(url, timeout=20) as response:
-            return response.read()
+        sys.path.insert(0, str(SKILL_DIR / "assets"))
+        from icons_pack import ICONS_PNG  # type: ignore
+
+        raw = ICONS_PNG.get(icon_id)
+        if not raw:
+            return None
+        import base64
+
+        return base64.b64decode(raw)
     except Exception:
         return None
 
@@ -205,7 +204,7 @@ def fetch_sticker(icon_id: str):
 def overlay_icon(qr_path: Path, icon_id: str) -> bool:
     if not icon_id:
         return False
-    raw = fetch_sticker(icon_id)
+    raw = load_sticker(icon_id)
     if not raw:
         return False
     try:
@@ -294,7 +293,7 @@ def main() -> None:
         else:
             sys.stderr.write(
                 "warning: requested icon %r was not applied "
-                "(network or pillow missing). QR is still valid without sticker.\n" % icon_id
+                "(bundled sticker missing or pillow missing). QR is still valid without sticker.\n" % icon_id
             )
 
     summary = {
