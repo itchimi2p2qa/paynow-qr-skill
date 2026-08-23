@@ -181,24 +181,13 @@ def write_clean_png(qr_string: str, out: Path, hex_color: str, size: int) -> Pat
 
 
 def load_sticker(icon_id: str):
-    """Load a bundled sticker. No network."""
+    """Load a bundled sticker from assets/icons. No network."""
     if not icon_id:
         return None
     local = ICONS_DIR / f"{icon_id}.png"
     if local.is_file():
         return local.read_bytes()
-    try:
-        sys.path.insert(0, str(SKILL_DIR / "assets"))
-        from icons_pack import ICONS_PNG  # type: ignore
-
-        raw = ICONS_PNG.get(icon_id)
-        if not raw:
-            return None
-        import base64
-
-        return base64.b64decode(raw)
-    except Exception:
-        return None
+    return None
 
 
 def overlay_icon(qr_path: Path, icon_id: str) -> bool:
