@@ -7,7 +7,7 @@ CRC is CRC-16/CCITT-FALSE. Check vector `123456789` must hash to `29B1`.
 ## Mobile template
 
 - 00 Payload format `01`
-- 01 Point of initiation `12` (dynamic)
+- 01 Point of initiation `12` when an amount is set, `11` when the amount is open (reusable static code)
 - 26 SG.PAYNOW
   - 00 `SG.PAYNOW`
   - 01 proxy type `0` mobile or `2` UEN
