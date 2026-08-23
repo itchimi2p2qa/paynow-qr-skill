@@ -4,6 +4,15 @@ Local Singapore PayNow QR generator for Grok, Claude, and other agents. No API k
 
 This repository *is* the skill. `SKILL.md` sits at the repo root so installers can point at the address directly.
 
+## Download zip
+
+Ready-made archive of this repo (use this for Claude.ai upload):
+
+https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/heads/main.zip
+
+Claude.ai — Settings → Capabilities → Skills → Upload skill → pick that zip.
+If the unzipped folder is named `paynow-qr-skill-main`, that is fine as long as `SKILL.md` is inside it.
+
 ## Install from this repo
 
 Claude Code / skills CLI
@@ -18,16 +27,14 @@ or
 git clone https://github.com/itchimi2p2qa/paynow-qr-skill.git ~/.claude/skills/paynow-qr
 ```
 
-Claude.ai chat — Settings, Capabilities, Skills, upload a zip of this folder.
-
-Grok — give the agent this URL and ask it to install the skill from the repo.
-
 Then set *your* PayNow mobile (not anyone else's):
 
 ```bash
 python3 scripts/setup_payee.py --mobile +65XXXXXXXX
 pip install segno pillow
 ```
+
+A chatbot cannot persist the skill into your account from a URL. You still upload the zip once.
 
 ## What it does
 
