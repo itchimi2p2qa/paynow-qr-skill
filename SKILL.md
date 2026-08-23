@@ -2,7 +2,7 @@
 name: paynow-qr
 description: Generate Singapore PayNow QR codes locally with no API key. Use when the user says pay me, set my mobile, add a favorite, pay another person, create a QR for a phone number or UEN, request SGD, split a bill, add a payment note, or put a center icon sticker such as burger, beer, pizza, or plane on the QR.
 metadata:
-  version: "2.1"
+  version: "2.2"
   engine: local-emvco
   default_expiry: none
   render: local-payload
@@ -56,7 +56,7 @@ If the user names a sticker (burger, beer, pizza, plane, karaoke, party, doge, a
 
 Default is `--icon none` (no sticker, easiest scan). `paynow` also means no extra sticker.
 
-The script encodes `qr_string` first, then paints a small bundled sticker on a white circle. Stickers live in `assets/icons/` and `assets/icons_pack.py`. Do not fetch them from the network.
+The script encodes `qr_string` first, then paints a small bundled sticker from `assets/icons/<id>.png` on a white circle. Do not fetch stickers from the network.
 
 If a stickered code will not scan, regenerate with `--icon none`.
 
