@@ -2,7 +2,7 @@
 name: paynow-qr
 description: Generate Singapore PayNow QR codes locally with no API key. Use when the user says pay me, set my mobile, add a favorite, pay another person, create a QR for a phone number or UEN, request SGD, split a bill, add a payment note, or put a center icon sticker such as burger, beer, pizza, or plane on the QR.
 metadata:
-  version: "2.2"
+  version: "1.0.0"
   engine: local-emvco
   default_expiry: none
   render: local-payload
@@ -48,7 +48,7 @@ If the user wants to split a total (example only, not the main flow), divide fir
 
 ## Confirm before showing the image
 
-PayNow transfers are effectively irreversible. State the encoded mobile or UEN, amount, and sanitized reference back to the user before presenting the PNG. The receiving bank shows the registered account name on scan — that is the real typo check.
+PayNow transfers are typically irreversible. State the encoded mobile or UEN, amount, and sanitized reference back to the user before presenting the PNG. The receiving bank shows the registered account name on scan — that is the real typo check.
 
 ## Center icon
 
