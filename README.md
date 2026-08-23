@@ -40,7 +40,7 @@ A folder named `paynow-qr-skill-main` is fine if `SKILL.md` is inside it.
 - Builds the EMVCo / SGQR payload on the machine
 - CRC-16/CCITT-FALSE (`123456789` → `29B1`)
 - Mobile, UEN, open amount, bill reference, favorites
-- Optional center sticker when `assets/icons/` or `assets/icons_pack.py` is present
+- Optional center sticker from `assets/icons/`
 - Confirms encoded details before showing the image
 
 PayNow transfers are effectively irreversible. The receiving bank shows the registered account name on scan.
