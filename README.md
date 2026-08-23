@@ -1,5 +1,8 @@
 # PayNow QR skill
 
+<img width="292" height="292" alt="image" src="https://github.com/user-attachments/assets/fc7c5743-57aa-4a16-8d79-17075b245841" />
+
+
 Local Singapore PayNow QR generator for Grok, Claude, and other agents. No API key.
 
 This repository *is* the skill. `SKILL.md` is at the repo root.
