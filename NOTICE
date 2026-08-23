@@ -1,0 +1,14 @@
+PayNow QR skill
+
+This project is not affiliated with, endorsed by, or issued by the Monetary
+Authority of Singapore, PayNow, NETS, or any Singapore bank.
+
+PayNow transfers are typically irreversible. Confirm the encoded mobile or UEN,
+amount, and reference before anyone scans a generated code. The receiving bank
+shows the registered account name on scan — that is the real typo check.
+
+Do not commit assets/defaults.json. That file can contain a personal mobile
+number after setup.
+
+Center stickers are Twemoji 14.0.2 artwork, licensed CC-BY 4.0 by Twitter, Inc.
+https://github.com/twitter/twemoji
