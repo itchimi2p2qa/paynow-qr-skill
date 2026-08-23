@@ -111,9 +111,13 @@ def build_payload(
 
     additional = tlv("01", ref) if ref else ""
 
+    # 11 = static / reusable, 12 = dynamic / single-use.
+    # Open-amount codes are meant to be reused, so they use 11.
+    initiation = "11" if amount_str == "" else "12"
+
     payload = (
         tlv("00", "01")
-        + tlv("01", "12")
+        + tlv("01", initiation)
         + tlv("26", paynow)
         + tlv("52", "0000")
         + tlv("53", "702")
