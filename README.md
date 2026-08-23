@@ -1,12 +1,18 @@
 # PayNow QR skill
 
-<img width="292" height="292" alt="image" src="https://github.com/user-attachments/assets/fc7c5743-57aa-4a16-8d79-17075b245841" />
+**v1.0.0** &middot; public release &middot; no API key
 
-Local Singapore PayNow QR generator for Grok, Claude, and other agents. No API key.
+<img width="292" height="292" alt="Sample PayNow QR" src="https://github.com/user-attachments/assets/fc7c5743-57aa-4a16-8d79-17075b245841" />
 
-This repository *is* the skill. `SKILL.md` is at the repo root.
+Local Singapore PayNow QR generator for Grok, Claude, and other agents.
+
+This repository *is* the skill. `SKILL.md` sits at the repo root.
+
+Not affiliated with MAS, PayNow, NETS, or any bank. Transfers are typically irreversible — confirm the encoded mobile or UEN, amount, and reference before anyone scans.
 
 Repo: https://github.com/itchimi2p2qa/paynow-qr-skill
+
+Stable zip: https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/tags/v1.0.0.zip
 
 ## Point an AI at this repo
 
@@ -33,9 +39,11 @@ pip install segno pillow
 
 Claude.ai website skills are account settings. A chat cannot write them. There you still do:
 Settings → Capabilities → Skills → Upload skill →
-https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/heads/main.zip
+https://github.com/itchimi2p2qa/paynow-qr-skill/archive/refs/tags/v1.0.0.zip
 
-A folder named `paynow-qr-skill-main` is fine if `SKILL.md` is inside it.
+A folder named `paynow-qr-skill-1.0.0` is fine if `SKILL.md` is inside it.
+
+More setup notes: [IMPORT.md](IMPORT.md)
 
 ## What it does
 
@@ -45,7 +53,16 @@ A folder named `paynow-qr-skill-main` is fine if `SKILL.md` is inside it.
 - Optional center sticker from `assets/icons/`
 - Confirms encoded details before showing the image
 
-PayNow transfers are effectively irreversible. The receiving bank shows the registered account name on scan.
+PayNow transfers are typically irreversible. The receiving bank shows the registered account name on scan.
+
+## Safety
+
+- No API key. Do not add one.
+- `assets/defaults.json` is local and gitignored. Do not commit your number.
+- State payee, amount, and reference back before showing the QR.
+- Open amount uses initiation tag `11`. Fixed amount uses `12`.
+
+See [SECURITY.md](SECURITY.md) and [NOTICE](NOTICE).
 
 ## Center stickers
 
@@ -146,6 +163,16 @@ Default is no sticker (`none` or `paynow`) so the QR stays easiest to scan. If a
 
 Twemoji stickers are CC-BY 4.0 Twitter, Inc.
 
+## Docs
+
+- [CHANGELOG.md](CHANGELOG.md)
+- [SECURITY.md](SECURITY.md)
+- [NOTICE](NOTICE)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [IMPORT.md](IMPORT.md)
+- [references/payload.md](references/payload.md)
+- [references/icons.md](references/icons.md)
+
 ## License
 
-MIT
+[MIT](LICENSE)
