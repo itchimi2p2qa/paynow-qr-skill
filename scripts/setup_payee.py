@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Save installer PayNow mobile and optional favorite nicknames."""
+"""Save and confirm the installer registered PayNow mobile."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
-import sys
 from pathlib import Path
 
 SKILL_DIR = Path(__file__).resolve().parents[1]
@@ -32,6 +31,7 @@ def load_defaults() -> dict:
     data.setdefault("payment_type", "mobile")
     data.setdefault("me_mobile", "")
     data.setdefault("mobile_number", data.get("me_mobile", ""))
+    data.setdefault("me_mobile_confirmed", False)
     data.setdefault("favorites", {})
     data.setdefault("uen", "")
     data.setdefault("merchant_name", "")
@@ -47,9 +47,31 @@ def save_defaults(data: dict) -> dict:
     return data
 
 
+def setup_status(data: dict) -> dict:
+    me = data.get("me_mobile") or data.get("mobile_number") or ""
+    confirmed = bool(me) and bool(data.get("me_mobile_confirmed"))
+    return {
+        "me_mobile": me or None,
+        "me_mobile_confirmed": bool(data.get("me_mobile_confirmed")) if me else False,
+        "setup_complete": confirmed,
+        "favorites": data.get("favorites") or {},
+        "path": str(DEFAULTS_PATH),
+    }
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Configure PayNow payee defaults")
-    parser.add_argument("--mobile", help="Installer mobile used when the user says pay me")
+    parser = argparse.ArgumentParser(
+        description="Set and confirm the installer registered PayNow mobile"
+    )
+    parser.add_argument(
+        "--mobile",
+        help="Installer registered PayNow mobile. Default QR payee after --confirm.",
+    )
+    parser.add_argument(
+        "--confirm",
+        action="store_true",
+        help="Mark me_mobile as confirmed by the user. Required before default QRs.",
+    )
     parser.add_argument("--add-favorite", nargs=2, metavar=("NAME", "MOBILE"))
     parser.add_argument("--remove-favorite", metavar="NAME")
     parser.add_argument("--show", action="store_true")
@@ -60,9 +82,24 @@ def main() -> None:
 
     if args.mobile:
         mobile = normalize_mobile(args.mobile)
+        previous = data.get("me_mobile") or ""
         data["me_mobile"] = mobile
         data["mobile_number"] = mobile
         data["payment_type"] = "mobile"
+        if previous != mobile:
+            data["me_mobile_confirmed"] = False
+        changed = True
+
+    if args.confirm:
+        me = data.get("me_mobile") or data.get("mobile_number") or ""
+        if not me:
+            raise SystemExit(
+                "SETUP_REQUIRED: set the registered PayNow mobile first. "
+                "Run setup_payee.py --mobile +6591234567"
+            )
+        data["me_mobile"] = normalize_mobile(str(me))
+        data["mobile_number"] = data["me_mobile"]
+        data["me_mobile_confirmed"] = True
         changed = True
 
     if args.add_favorite:
@@ -82,20 +119,24 @@ def main() -> None:
     if changed:
         save_defaults(data)
 
-    me = data.get("me_mobile") or data.get("mobile_number") or ""
-    out = {
-        "me_mobile": me or None,
-        "favorites": data.get("favorites") or {},
-        "path": str(DEFAULTS_PATH),
-        "saved": changed,
-    }
-    if args.show or not changed:
-        if not me and not out["favorites"] and not args.show:
+    out = setup_status(data)
+    out["saved"] = changed
+
+    if not changed and not args.show:
+        if not out["setup_complete"]:
+            if not out["me_mobile"]:
+                raise SystemExit(
+                    "SETUP_REQUIRED: no registered PayNow mobile. "
+                    "Ask the user for their PayNow number, then "
+                    "run setup_payee.py --mobile +65XXXXXXXX and --confirm"
+                )
             raise SystemExit(
-                "me_mobile is not set. Run setup_payee.py --mobile +6591234567"
+                "SETUP_UNCONFIRMED: stored %s has not been confirmed. "
+                "Read that number back. If they agree, run setup_payee.py --confirm"
+                % out["me_mobile"]
             )
-    json.dump(out, sys.stdout, indent=2)
-    sys.stdout.write("\n")
+
+    print(json.dumps(out, indent=2))
 
 
 if __name__ == "__main__":
