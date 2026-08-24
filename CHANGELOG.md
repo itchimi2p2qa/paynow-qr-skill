@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.0 — 2026-08-24
+
+Installer PayNow mobile is required and must be confirmed.
+
+- Default QR payee is the installer's registered mobile (`me_mobile`)
+- `setup_payee.py --confirm` sets `me_mobile_confirmed`
+- `--show` reports `setup_complete` only when the number is set and confirmed
+- Generator refuses default / `--to-me` QRs until setup is complete
+- Changing `--mobile` clears confirmation
+- Docs — README, IMPORT, SKILL, SECURITY, CONTRIBUTING, `references/setup.md`
+
 ## 1.0.0 — 2026-08-23
 
 First public release.

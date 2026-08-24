@@ -2,6 +2,7 @@
   "payment_type": "mobile",
   "me_mobile": "",
   "mobile_number": "",
+  "me_mobile_confirmed": false,
   "favorites": {},
   "uen": "",
   "merchant_name": "",

@@ -4,18 +4,19 @@ This skill never needs an API key. Do not add one.
 
 ## Private data
 
-After setup, `assets/defaults.json` holds the installer mobile and optional
-favorites. That file is gitignored. Do not commit it or paste it into a public
-issue.
+After setup, `assets/defaults.json` holds the installer registered PayNow
+mobile, whether they confirmed it, and optional favorites. That file is
+gitignored. Do not commit it or paste it into a public issue.
 
 ## Payments
 
-PayNow transfers are typically irreversible. The generator will print the
-encoded mobile or UEN, amount, and sanitized reference. Read that back before
-showing the QR.
+The default QR pays the installer number. Wrong number + send = money gone.
 
-Wrong number + send = money gone. The receiving bank shows the registered
-account name on scan; use that as the last check.
+Do not generate a default / pay-me QR until `setup_complete` is true.
+
+The generator prints the encoded mobile or UEN, amount, and sanitized
+reference. Read that back before showing the QR. The receiving bank shows
+the registered account name on scan; use that as the last check.
 
 ## Reporting
 
