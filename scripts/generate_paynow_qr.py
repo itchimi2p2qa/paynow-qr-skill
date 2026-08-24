@@ -125,6 +125,7 @@ def load_defaults() -> dict:
     return {
         "payment_type": "mobile",
         "me_mobile": "",
+        "me_mobile_confirmed": False,
         "favorites": {},
         "expiry": "none",
         "qr_size": 300,
@@ -136,9 +137,20 @@ def me_mobile(defaults: dict) -> str:
     raw = defaults.get("me_mobile") or defaults.get("mobile_number") or ""
     if not raw or "X" in str(raw):
         raise SystemExit(
-            "Installer mobile is not set. Run scripts/setup_payee.py --mobile +6591234567"
+            "SETUP_REQUIRED: no registered PayNow mobile. "
+            "Ask the user for the number they registered with PayNow, then "
+            "run scripts/setup_payee.py --mobile +6591234567 and --confirm. "
+            "Do not guess a number."
         )
-    return normalize_mobile(str(raw))
+    mobile = normalize_mobile(str(raw))
+    if not defaults.get("me_mobile_confirmed"):
+        raise SystemExit(
+            "SETUP_UNCONFIRMED: stored installer mobile is %s but it is not confirmed. "
+            "Read that number back. If they agree it is their registered PayNow mobile, "
+            "run scripts/setup_payee.py --confirm, then generate again."
+            % mobile
+        )
+    return mobile
 
 
 def resolve_favorite(defaults: dict, name: str) -> str:
@@ -181,7 +193,6 @@ def write_clean_png(qr_string: str, out: Path, hex_color: str, size: int) -> Pat
 
 
 def load_sticker(icon_id: str):
-    """Load a bundled sticker from assets/icons. No network."""
     if not icon_id:
         return None
     local = ICONS_DIR / f"{icon_id}.png"
@@ -200,7 +211,6 @@ def overlay_icon(qr_path: Path, icon_id: str) -> bool:
         from PIL import Image, ImageDraw
     except ImportError:
         return False
-
     qr = Image.open(qr_path).convert("RGBA")
     sticker = Image.open(BytesIO(raw)).convert("RGBA")
     width, height = qr.size
@@ -220,7 +230,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Generate a PayNow QR locally")
     parser.add_argument("--amount", type=float, default=0.0)
     parser.add_argument("--reference", default="")
-    parser.add_argument("--to-me", action="store_true")
+    parser.add_argument(
+        "--to-me",
+        action="store_true",
+        help="Encode the confirmed installer PayNow mobile (standard payee)",
+    )
     parser.add_argument("--favorite", help="Nickname from assets/defaults.json favorites")
     parser.add_argument("--payment-type", choices=["mobile", "uen"])
     parser.add_argument("--mobile", help="Someone else's Singapore mobile")
@@ -253,7 +267,8 @@ def main() -> None:
         mobile = normalize_mobile(args.mobile)
         payee = "other"
     else:
-        raise SystemExit("Give --to-me, --favorite NAME, --mobile +65..., or --uen")
+        mobile = me_mobile(defaults)
+        payee = "me"
 
     amount = float(args.amount) if args.amount else None
     reference = sanitize_reference(args.reference)
