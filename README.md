@@ -1,6 +1,6 @@
 # PayNow QR skill
 
-**v1.1.0** &middot; public release &middot; no API key
+**v1.1.1** &middot; public release &middot; no API key
 
 <img width="292" height="292" alt="Sample PayNow QR" src="https://github.com/user-attachments/assets/fc7c5743-57aa-4a16-8d79-17075b245841" />
 
@@ -32,7 +32,7 @@ npx skills add itchimi2p2qa/paynow-qr-skill
 git clone https://github.com/itchimi2p2qa/paynow-qr-skill.git ~/.claude/skills/paynow-qr
 ```
 
-Then set **and confirm** the installer's registered PayNow mobile. Until that is done, the skill will not generate a default QR — it would not know whose number to encode.
+On install and first use the agent **asks** for the installer's registered PayNow mobile and waits for an explicit yes. A payment request is not confirmation. Until that yes is stored, it will not generate a default QR.
 
 ```
 python3 scripts/setup_payee.py --mobile +65XXXXXXXX
@@ -41,7 +41,7 @@ python3 scripts/setup_payee.py --show
 pip install segno pillow
 ```
 
-`--show` must report `setup_complete: true`. Changing the number clears confirmation.
+`--show` must report `setup_complete: true`. Changing the number clears confirmation and the agent asks again.
 
 The standard payment flow is a QR for **that installer number**. Name another mobile, a favorite, or a UEN only when you want someone else paid.
 
@@ -56,7 +56,8 @@ More setup notes: [IMPORT.md](IMPORT.md) and [references/setup.md](references/se
 ## What it does
 
 - Builds the EMVCo / SGQR payload on the machine
-- Default payee is the installer's confirmed PayNow mobile
+- Asks for and confirms the installer's PayNow mobile on install and first use
+- Default payee is that confirmed mobile
 - CRC-16/CCITT-FALSE (`123456789` → `29B1`)
 - Mobile, UEN, open amount, bill reference, favorites
 - Optional center sticker from `assets/icons/`

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.1 — 2026-08-24
+
+Install and first usage must ask the user to confirm their registered PayNow mobile before any QR.
+
+- Scripted prompts in `SKILL.md` and `references/setup.md`
+- A payment request is not treated as confirmation
+- Changing the number still clears confirmation and asks again
+
 ## 1.1.0 — 2026-08-24
 
 Installer PayNow mobile is required and must be confirmed.

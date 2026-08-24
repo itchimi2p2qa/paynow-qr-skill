@@ -2,9 +2,11 @@
 
 One skill folder. No API key.
 
-The standard QR pays **your registered PayNow mobile**. Set it and confirm it before asking for a code.
+The standard QR pays **your registered PayNow mobile**. On install and first use the agent must ask you to confirm that number. Do not skip the question.
 
 ## After install
+
+The agent should ask: "What Singapore number is registered to your PayNow?" Then it reads the number back and waits for yes.
 
 1. Save your registered PayNow number
 

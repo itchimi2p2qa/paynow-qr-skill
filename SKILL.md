@@ -2,11 +2,12 @@
 name: paynow-qr
 description: Generate Singapore PayNow QR codes locally with no API key. Default payee is the installer's registered PayNow mobile after they set and confirm it. Use when the user says set my mobile, confirm my PayNow number, pay me, request SGD, pay another person, pay a UEN, split a bill, add a payment note, or put a center icon sticker such as burger, beer, pizza, or plane on the QR.
 metadata:
-  version: "1.1.0"
+  version: "1.1.1"
   engine: local-emvco
   default_payee: installer-mobile
   default_expiry: none
   render: local-payload
+  ask_confirm_on_first_use: true
 license: MIT
 ---
 
@@ -18,24 +19,32 @@ Build the EMVCo / SGQR payload on the machine. Do not call an API and do not use
 
 Every ordinary request (pay me, create a QR, request 25 dollars) encodes **the installer's registered PayNow mobile**. That is the default. Other people or a UEN only when the user names them.
 
-## Setup before any QR
+## Ask on install and first use (required)
 
-On first use in a session, run:
+Do this before the first QR in a conversation. Do not skip it even if a number is already on disk.
 
-```bash
-python3 scripts/setup_payee.py --show
-```
+1. Run `python3 scripts/setup_payee.py --show`.
+2. Speak to the user. Use one of these prompts.
 
-If `setup_complete` is not true, stop. Do not invent a number and do not generate.
+No number yet
 
-Missing number — ask for the mobile they registered with PayNow. Save it, read it back, wait for an explicit yes, then confirm.
+> This skill pays your registered PayNow mobile by default. What Singapore number is registered to your PayNow? I will read it back and wait for you to confirm before I save it.
+
+Number stored
+
+> I have +65XXXXXXXX as your PayNow mobile. Is that the number registered to your PayNow? Reply yes to confirm, or send a different number.
+
+3. Wait for an explicit yes, or a replacement number. Do not treat silence, a payment request, or a previous chat as confirmation.
+4. Save and confirm only after that yes.
 
 ```bash
 python3 scripts/setup_payee.py --mobile +6591234567
 python3 scripts/setup_payee.py --confirm
 ```
 
-Number stored but `me_mobile_confirmed` is false — show that exact number and ask "Is this your registered PayNow mobile?" Only `--confirm` after they agree.
+5. If they send a new number, save it, read it back, and ask again. Changing `--mobile` clears confirmation.
+
+Until `setup_complete` is true, stop. Do not invent a number and do not generate.
 
 Full handshake is in `references/setup.md`.
 
